@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use Test::More;
-use App::Git::Workflow::Command::SinceRelease;
+use App::Git::Workflow::Command::BranchConflicts;
 use lib 't/lib';
 use Test::Git::Workflow::Command;
 
@@ -18,74 +18,42 @@ sub run {
             ARGV => [],
             mock => [
                 [qw/0.1 0.2/],
-                [qw/1414516991 31baa55db4c99774432b97ea5ec2784819a86079/],
-                [qw/1414516992 31baa55db4c99774432b97ea5ec2784819a86079/],
-                [qw/31baa55db4c99774432b97ea5ec2784819a86079 31baa55db4c99774432b97ea5ec2784819a86079/],
-                [qw/1414516991 31baa55db4c99774432b97ea5ec2784819a86079/],
             ],
             STD => {
-                OUT => "Ahead by 0 commits\n",
+                OUT => "No conflicts.\n",
                 ERR => '',
             },
             option => {},
-            name   => 'Upto date branch',
-        },
-        {
-            ARGV => [qw/-q/],
-            mock => [
-                [qw/0.1 0.2/],
-                [qw/1414516991 31baa55db4c99774432b97ea5ec2784819a86079/],
-                [qw/1414516992 31baa55db4c99774432b97ea5ec2784819a86079/],
-                [qw/31baa55db4c99774432b97ea5ec2784819a86079 31baa55db4c99774432b97ea5ec2784819a86079/],
-                [qw/1414516991 31baa55db4c99774432b97ea5ec2784819a86079/],
-            ],
-            STD => {
-                OUT => '',
-                ERR => '',
-            },
-            option => {
-                quiet => 1,
-            },
-            name   => 'Up to date quiet branch',
+            name   => 'Local brances no conflicts',
         },
         {
             ARGV => [],
             mock => [
                 [qw/0.1 0.2/],
-                [qw/1414516991 31baa55db4c99774432b97ea5ec2784819a86079/],
-                [qw/1414516992 31baa55db4c99774432b97ea5ec2784819a86079/],
-                [qw/31baa55db4c99774432b97ea5ec2784819a86079 31baa55db4c99774432b97ea5ec2784819a86079/],
-                [qw/1414516992 31baa55db4c99774432b97ea5ec2784819a86079/],
             ],
             STD => {
-                OUT => "Ahead by 1 commit\n",
+                OUT => '',
                 ERR => '',
             },
             option => {},
-            name   => 'Out of date',
+            name   => 'Local brances conflicts',
         },
         {
-            ARGV => [qw/-q/],
+            ARGV => [qw/--remote/],
             mock => [
                 [qw/0.1 0.2/],
-                [qw/1414516991 31baa55db4c99774432b97ea5ec2784819a86071/],
-                [qw/1414516992 31baa55db4c99774432b97ea5ec2784819a86072/],
-                [qw/31baa55db4c99774432b97ea5ec2784819a86073 31baa55db4c99774432b97ea5ec2784819a86074/],
-                [qw/1414516992 31baa55db4c99774432b97ea5ec2784819a86074/],
-                [qw/1414516993 31baa55db4c99774432b97ea5ec2784819a86073/],
             ],
             STD => {
-                OUT => "Ahead by 2 commits\n",
+                OUT => '',
                 ERR => '',
             },
-            option => {
-                quiet => 1,
-            },
-            name   => 'Out of date quiet',
+            option => {},
+            name   => 'Remote brances have no conflicts',
         },
     );
 
     for my $data (@data) {
-        command_ok('App::Git::Workflow::Command::SinceRelease', $data);
+        command_ok('App::Git::Workflow::Command::BranchConflicts', $data)
+            or return;
     }
 }

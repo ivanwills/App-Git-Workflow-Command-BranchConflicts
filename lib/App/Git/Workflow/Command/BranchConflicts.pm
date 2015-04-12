@@ -24,9 +24,12 @@ sub run {
 
     get_options(
         \%option,
+        'remote|r',
+        'both|a',
         'quiet|q',
     );
 
+    my @branches = $workflow->branches($option{remote} ? 'remote' : $option{all} ? 'both' : undef);
 
     return;
 }
