@@ -46,4 +46,4 @@ not_in_file_ok(Changes =>
     "placeholder date/time"       => qr(Date/time)
 );
 
-module_boilerplate_ok('lib/App/Git/Workflow/Command/SinceRelease.pm');
+module_boilerplate_ok('lib/App/Git/Workflow/Command/BranchConflicts.pm');
