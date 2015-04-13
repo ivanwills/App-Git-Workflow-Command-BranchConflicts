@@ -43,6 +43,8 @@ sub run {
                 push @conflicts, "    $first_branch $branch\n";
             }
         }
+
+        $workflow->git->checkout('-');
     }
 
     if (@conflicts) {
@@ -52,6 +54,8 @@ sub run {
     else {
         print "No conflicts.\n";
     }
+
+    $self->cleanup();
 
     return;
 }
@@ -73,14 +77,14 @@ sub merge_branch_conflicts {
 
     $workflow->git->merge('--no-commit', $branch);
     my $status = $workflow->git->status;
-    $workflow->git->merge('--abort');
+    eval { $workflow->git->merge('--abort'); };
 
     return $status =~ /both modified/;
 }
 
-sub DESTROY {
+sub cleanup {
 
-    for my $branch (@checkouts) {
+    while ( my $branch = shift @checkouts) {
         $workflow->git->branch('-D', $branch);
     }
 

@@ -22,6 +22,8 @@ sub run {
                 { merge    => undef },
                 { status   => '# modified file1' },
                 { merge    => undef },
+                { checkout => undef },
+                { branch   => undef },
             ],
             STD => {
                 OUT => "No conflicts.\n",
@@ -43,21 +45,26 @@ sub run {
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
                 # branch1 -> master
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
-                { checkout => undef },
+                { checkout => undef }, { checkout => undef },
                 # branch2 -> branch3
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
                 # branch2 -> branch4
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
                 # branch2 -> master
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
-                { checkout => undef },
+                { checkout => undef }, { checkout => undef },
                 # branch3 -> branch4
                 { merge => undef }, { status => '# both modified: file1' }, { merge => undef },
                 # branch3 -> master
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
-                { checkout => undef },
+                { checkout => undef }, { checkout => undef },
                 # branch4 -> master
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
+                { checkout => undef },
+                { branch   => undef },
+                { branch   => undef },
+                { branch   => undef },
+                { branch   => undef },
             ],
             STD => {
                 OUT => <<'OUT',
@@ -78,12 +85,14 @@ OUT
                 { merge    => undef },
                 { status   => '# modified file1' },
                 { merge    => undef },
+                { checkout => undef },
+                { branch   => undef },
             ],
             STD => {
                 OUT => "No conflicts.\n",
                 ERR => '',
             },
-            option => {},
+            option => { remote => 1 },
             name   => 'Remote brances have no conflicts',
         },
     );
