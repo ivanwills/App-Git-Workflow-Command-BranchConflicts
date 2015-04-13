@@ -17,7 +17,11 @@ sub run {
         {
             ARGV => [],
             mock => [
-                [qw/0.1 0.2/],
+                { branch   => [map {" $_"} qw/master other/] },
+                { checkout => undef },
+                { merge    => undef },
+                { status   => '# modified file1' },
+                { merge    => undef },
             ],
             STD => {
                 OUT => "No conflicts.\n",
@@ -29,10 +33,38 @@ sub run {
         {
             ARGV => [],
             mock => [
-                [qw/0.1 0.2/],
+                { branch   => [map {" $_"} qw/master branch1 branch2 branch3 branch4/] },
+                { checkout => undef },
+                # branch1 -> branch2
+                { merge => undef }, { status => '# both modified: file1' }, { merge => undef },
+                # branch1 -> branch3
+                { merge => undef }, { status => '# modified file1' }, { merge => undef },
+                # branch1 -> branch4
+                { merge => undef }, { status => '# modified file1' }, { merge => undef },
+                # branch1 -> master
+                { merge => undef }, { status => '# modified file1' }, { merge => undef },
+                { checkout => undef },
+                # branch2 -> branch3
+                { merge => undef }, { status => '# modified file1' }, { merge => undef },
+                # branch2 -> branch4
+                { merge => undef }, { status => '# modified file1' }, { merge => undef },
+                # branch2 -> master
+                { merge => undef }, { status => '# modified file1' }, { merge => undef },
+                { checkout => undef },
+                # branch3 -> branch4
+                { merge => undef }, { status => '# both modified: file1' }, { merge => undef },
+                # branch3 -> master
+                { merge => undef }, { status => '# modified file1' }, { merge => undef },
+                { checkout => undef },
+                # branch4 -> master
+                { merge => undef }, { status => '# modified file1' }, { merge => undef },
             ],
             STD => {
-                OUT => '',
+                OUT => <<'OUT',
+Conflicting branches:
+    branch1 branch2
+    branch3 branch4
+OUT
                 ERR => '',
             },
             option => {},
@@ -41,10 +73,14 @@ sub run {
         {
             ARGV => [qw/--remote/],
             mock => [
-                [qw/0.1 0.2/],
+                { branch   => [map {" $_"} qw{origin/master origin/other}] },
+                { checkout => undef },
+                { merge    => undef },
+                { status   => '# modified file1' },
+                { merge    => undef },
             ],
             STD => {
-                OUT => '',
+                OUT => "No conflicts.\n",
                 ERR => '',
             },
             option => {},

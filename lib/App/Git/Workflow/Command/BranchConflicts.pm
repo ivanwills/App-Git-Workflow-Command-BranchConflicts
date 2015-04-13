@@ -29,12 +29,63 @@ sub run {
         'quiet|q',
     );
 
-    my @branches = $workflow->branches($option{remote} ? 'remote' : $option{all} ? 'both' : undef);
+    my @branches = $workflow->branches($option{remote} ? 'remote' : $option{both} ? 'both' : undef);
+    my @conflicts;
+
+    # check all branches for conflicts with other branches
+    while (@branches > 1) {
+        my $first_branch = shift @branches;
+
+        $self->checkout_branch($first_branch);
+
+        for my $branch (@branches) {
+            if ( $self->merge_branch_conflicts($branch) ) {
+                push @conflicts, "    $first_branch $branch\n";
+            }
+        }
+    }
+
+    if (@conflicts) {
+        print "Conflicting branches:\n";
+        print @conflicts;
+    }
+    else {
+        print "No conflicts.\n";
+    }
 
     return;
 }
 
+my @checkouts;
+sub checkout_branch {
+    my ($self, $branch) = @_;
 
+    my $local = 'branch-conflicts-' . sprintf '%03i', scalar @checkouts;
+    $workflow->git->checkout('-b', $local, '--no-track', $branch);
+
+    push @checkouts, $local;
+
+    return $local;
+}
+
+sub merge_branch_conflicts {
+    my ($self, $branch) = @_;
+
+    $workflow->git->merge('--no-commit', $branch);
+    my $status = $workflow->git->status;
+    $workflow->git->merge('--abort');
+
+    return $status =~ /both modified/;
+}
+
+sub DESTROY {
+
+    for my $branch (@checkouts) {
+        $workflow->git->branch('-D', $branch);
+    }
+
+    return;
+}
 1;
 
 __DATA__
