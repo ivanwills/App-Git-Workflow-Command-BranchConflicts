@@ -111,7 +111,7 @@ __DATA__
 
 =head1 NAME
 
-App::Git::Workflow::Command::BranchConflicts - <One-line description of module's purpose>
+App::Git::Workflow::Command::BranchConflicts - Module to find git branches that would conflict if merged
 
 =head1 VERSION
 
