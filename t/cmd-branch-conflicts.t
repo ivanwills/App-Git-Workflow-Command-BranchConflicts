@@ -22,6 +22,8 @@ sub run {
                 { merge    => undef },
                 { status   => '# modified file1' },
                 { merge    => undef },
+                { reset    => undef },
+                { clean    => undef },
                 { checkout => undef },
                 { branch   => undef },
             ],
@@ -45,22 +47,22 @@ sub run {
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
                 # branch1 -> master
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
-                { checkout => undef }, { checkout => undef },
+                { reset => undef }, { clean => undef }, { checkout => undef }, { checkout => undef },
                 # branch2 -> branch3
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
                 # branch2 -> branch4
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
                 # branch2 -> master
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
-                { checkout => undef }, { checkout => undef },
+                { reset => undef }, { clean => undef }, { checkout => undef }, { checkout => undef },
                 # branch3 -> branch4
                 { merge => undef }, { status => '# both modified: file1' }, { merge => undef },
                 # branch3 -> master
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
-                { checkout => undef }, { checkout => undef },
+                { reset => undef }, { clean => undef }, { checkout => undef }, { checkout => undef },
                 # branch4 -> master
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
-                { checkout => undef },
+                { reset => undef }, { clean => undef }, { checkout => undef },
                 { branch   => undef },
                 { branch   => undef },
                 { branch   => undef },
@@ -69,8 +71,10 @@ sub run {
             STD => {
                 OUT => <<'OUT',
 Conflicting branches:
-    branch1 branch2
-    branch3 branch4
+  branch1
+    branch2
+  branch3
+    branch4
 OUT
                 ERR => '',
             },
@@ -85,6 +89,8 @@ OUT
                 { merge    => undef },
                 { status   => '# modified file1' },
                 { merge    => undef },
+                { reset    => undef },
+                { clean    => undef },
                 { checkout => undef },
                 { branch   => undef },
             ],
