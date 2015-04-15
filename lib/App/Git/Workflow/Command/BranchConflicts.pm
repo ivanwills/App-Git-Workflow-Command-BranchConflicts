@@ -26,30 +26,44 @@ sub run {
         \%option,
         'remote|r',
         'both|a',
+        'merged|m=s',
+        'since|s=s',
         'quiet|q',
     );
 
-    my @branches = $workflow->branches($option{remote} ? 'remote' : $option{both} ? 'both' : undef);
-    my @conflicts;
+    my ($type, @arg) = $option{remote} ? (qw/remote -r/) : $option{both} ? (qw/both -a/) : ();
+    my @branches
+        = $option{merged}
+        ? map {/^\s+(.*)$/; $1} $workflow->git->branch(@arg, '--no-merged', $option{merged})
+        : $workflow->branches($type);
+    my %conflicts;
 
     # check all branches for conflicts with other branches
     while (@branches > 1) {
         my $first_branch = shift @branches;
+        next if $option{since} && !$workflow->git->log(qw/-n1 --since/, $option{since}, $first_branch);
+
+        print "Checking $first_branch\n" if $option{verbose};
 
         $self->checkout_branch($first_branch);
 
         for my $branch (@branches) {
+            next if $option{since} && !$workflow->git->log(qw/-n1 --since/, $option{since}, $branch);
             if ( $self->merge_branch_conflicts($branch) ) {
-                push @conflicts, "    $first_branch $branch\n";
+                push @{ $conflicts{$first_branch} }, $branch;
             }
         }
 
+        $workflow->git->reset('HEAD');
+        $workflow->git->clean('-xfd');
         $workflow->git->checkout('-');
     }
 
-    if (@conflicts) {
+    if (%conflicts) {
         print "Conflicting branches:\n";
-        print @conflicts;
+        for my $branch (sort keys %conflicts) {
+            print "  $branch\n", map {"    $_\n"} @{ $conflicts{$branch} };
+        }
     }
     else {
         print "No conflicts.\n";
@@ -75,7 +89,8 @@ sub checkout_branch {
 sub merge_branch_conflicts {
     my ($self, $branch) = @_;
 
-    $workflow->git->merge('--no-commit', $branch);
+    eval { $workflow->git->merge('--no-commit', $branch) };
+    return 1 if $@;
     my $status = $workflow->git->status;
     eval { $workflow->git->merge('--abort'); };
 
@@ -116,6 +131,21 @@ This documentation refers to App::Git::Workflow::Command::BranchConflicts versio
 
 =head1 SUBROUTINES/METHODS
 
+=head2 C<run ()>
+
+Entry point to running conflict checking
+
+=head2 C<checkout_branch ($branch)>
+
+Checks out branch in temporary branch
+
+=head2 C<merge_branch_conflicts ($branch)>
+
+Trys merging branch into current branch
+
+=head2 C<cleanup ()>
+
+Deletes all temporary branches
 
 =head1 DIAGNOSTICS
 
