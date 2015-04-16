@@ -141,7 +141,7 @@ Checks out branch in temporary branch
 
 =head2 C<merge_branch_conflicts ($branch)>
 
-Trys merging branch into current branch
+Tries merging branch into current branch
 
 =head2 C<cleanup ()>
 
