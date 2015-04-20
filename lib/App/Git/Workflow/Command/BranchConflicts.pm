@@ -27,7 +27,7 @@ sub run {
         \%option,
         'remote|r',
         'both|a',
-        'merged|m=s',
+        'merge|m=s',
         'since|s=s',
         'ignore|i=s',
         'quiet|q',
@@ -35,8 +35,8 @@ sub run {
 
     my ($type, @arg) = $option{remote} ? (qw/remote -r/) : $option{both} ? (qw/both -a/) : ();
     my @branches
-        = $option{merged}
-        ? map {/^\s+(.*)$/; $1} $workflow->git->branch(@arg, '--no-merged', $option{merged})
+        = $option{merge}
+        ? map {/^\s+(.*)$/; $1} $workflow->git->branch(@arg, '--no-merged', $option{merge})
         : $workflow->branches($type);
     my %conflicts;
 
@@ -131,12 +131,24 @@ This documentation refers to App::Git::Workflow::Command::BranchConflicts versio
 
 =head1 SYNOPSIS
 
-   use App::Git::Workflow::Command::BranchConflicts;
+   git-branch-conflicts [--remote|-r|--all|-a] [(--merge|-m) branch] [(--since|-s) date] [(--ignore|-i) regex]
 
-   # Brief but working code example(s) here showing the most common usage(s)
-   # This section will be as far as many users bother reading, so make it as
-   # educational and exemplary as possible.
+ OPTIONS:
+  -r --remote   List all remote branches
+  -a --all      List all branches
+  -m --merge[=]branch
+                Operate only on branches not merged with this branch
+  -s --since[=]date
+                Only look at branches that have changes since this date
+  -i --ignore[=]regex
+                Ignore any files matching this regex that conflict during
+                test merges (e.g. pom.xml changes)
+  -q --quiet    quite output
 
+     --verbose  Show more detailed option
+     --version  Prints the version information
+     --help     Prints this help information
+     --man      Prints the full documentation for git-branch-grep
 
 =head1 DESCRIPTION
 
