@@ -29,6 +29,7 @@ sub run {
         'both|a',
         'merged|m=s',
         'since|s=s',
+        'ignore|i=s',
         'quiet|q',
     );
 
@@ -98,11 +99,14 @@ sub merge_branch_conflicts {
     capture_stderr {
         eval { $workflow->git->merge('--no-commit', $branch) };
     };
-    return 1 if $@;
     my $status = $workflow->git->status;
     eval { $workflow->git->merge('--abort'); };
 
-    return $status =~ /both modified/;
+    if ($option{ignore}) {
+        $status =~ s/both (?:added|modified): \s+ $option{ignore}//;
+    }
+
+    return $status =~ /both (?:added|modified)/;
 }
 
 sub cleanup {
