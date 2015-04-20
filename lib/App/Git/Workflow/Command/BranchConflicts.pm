@@ -57,6 +57,7 @@ sub run {
 
         $workflow->git->reset('HEAD');
         $workflow->git->clean('-xfd');
+        $workflow->git->checkout('.');
         capture_stderr {
             $workflow->git->checkout('-');
         };
