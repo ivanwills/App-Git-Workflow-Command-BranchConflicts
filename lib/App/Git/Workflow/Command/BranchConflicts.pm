@@ -13,6 +13,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use App::Git::Workflow;
 use App::Git::Workflow::Command qw/get_options/;
+use Capture::Tiny qw/capture_stderr/;
 
 our $VERSION  = 0.8;
 our $workflow = App::Git::Workflow->new;
@@ -56,7 +57,9 @@ sub run {
 
         $workflow->git->reset('HEAD');
         $workflow->git->clean('-xfd');
-        $workflow->git->checkout('-');
+        capture_stderr {
+            $workflow->git->checkout('-');
+        };
     }
 
     if (%conflicts) {
@@ -79,7 +82,9 @@ sub checkout_branch {
     my ($self, $branch) = @_;
 
     my $local = 'branch-conflicts-' . sprintf '%03i', scalar @checkouts;
-    $workflow->git->checkout('-b', $local, '--no-track', $branch);
+    capture_stderr {
+        $workflow->git->checkout('-b', $local, '--no-track', $branch);
+    };
 
     push @checkouts, $local;
 
@@ -89,7 +94,9 @@ sub checkout_branch {
 sub merge_branch_conflicts {
     my ($self, $branch) = @_;
 
-    eval { $workflow->git->merge('--no-commit', $branch) };
+    capture_stderr {
+        eval { $workflow->git->merge('--no-commit', $branch) };
+    };
     return 1 if $@;
     my $status = $workflow->git->status;
     eval { $workflow->git->merge('--abort'); };
