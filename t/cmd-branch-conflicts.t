@@ -18,13 +18,14 @@ sub run {
             ARGV => [],
             mock => [
                 { branch   => [map {" $_"} qw/master other/] },
-                { checkout => undef },
+                { checkout => [] },
                 { merge    => undef },
                 { status   => '# modified file1' },
                 { merge    => undef },
                 { reset    => undef },
                 { clean    => undef },
                 { checkout => undef },
+                { checkout => [] },
                 { branch   => undef },
             ],
             STD => {
@@ -38,7 +39,7 @@ sub run {
             ARGV => [],
             mock => [
                 { branch   => [map {" $_"} qw/master branch1 branch2 branch3 branch4/] },
-                { checkout => undef },
+                { checkout => [] },
                 # branch1 -> branch2
                 { merge => undef }, { status => '# both modified: file1' }, { merge => undef },
                 # branch1 -> branch3
@@ -47,22 +48,22 @@ sub run {
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
                 # branch1 -> master
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
-                { reset => undef }, { clean => undef }, { checkout => undef }, { checkout => undef },
+                { reset => undef }, { clean => undef }, { checkout => undef }, { checkout => [] }, { checkout => [] },
                 # branch2 -> branch3
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
                 # branch2 -> branch4
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
                 # branch2 -> master
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
-                { reset => undef }, { clean => undef }, { checkout => undef }, { checkout => undef },
+                { reset => undef }, { clean => undef }, { checkout => undef }, { checkout => [] }, { checkout => [] },
                 # branch3 -> branch4
                 { merge => undef }, { status => '# both modified: file1' }, { merge => undef },
                 # branch3 -> master
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
-                { reset => undef }, { clean => undef }, { checkout => undef }, { checkout => undef },
+                { reset => undef }, { clean => undef }, { checkout => undef }, { checkout => [] }, { checkout => [] },
                 # branch4 -> master
                 { merge => undef }, { status => '# modified file1' }, { merge => undef },
-                { reset => undef }, { clean => undef }, { checkout => undef },
+                { reset => undef }, { clean => undef }, { checkout => undef }, { checkout => [] },
                 { branch   => undef },
                 { branch   => undef },
                 { branch   => undef },
@@ -85,13 +86,14 @@ OUT
             ARGV => [qw/--remote/],
             mock => [
                 { branch   => [map {" $_"} qw{origin/master origin/other}] },
-                { checkout => undef },
+                { checkout => [] },
                 { merge    => undef },
                 { status   => '# modified file1' },
                 { merge    => undef },
                 { reset    => undef },
                 { clean    => undef },
                 { checkout => undef },
+                { checkout => [] },
                 { branch   => undef },
             ],
             STD => {
