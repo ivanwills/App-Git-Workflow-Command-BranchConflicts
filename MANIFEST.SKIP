@@ -60,7 +60,7 @@ Debian_CPANTS.txt
 \bnytprof*
 
 # Avoid archives of this distribution
-\bmodule-[\d\.\_]+
+\bApp-Git-Workflow-Command-BranchConflicts-[\d\.\_]+
 
 # Avoid prove saved state file
 .prove
