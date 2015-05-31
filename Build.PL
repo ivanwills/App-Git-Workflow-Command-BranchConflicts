@@ -12,11 +12,12 @@ my $builder = Module::Build->new(
         'App::Git::Workflow'           => '0.8',
         'App::Git::Workflow::Command'  => '0.8',
         'Path::Class'                  => 0,
+        'Capture::Tiny'                => '0.24',
     },
     build_requires => {
         'Test::Git::Workflow::Command' => '0.8',
         'Test::More'                   => '0.88',
-        'Test::NoWarnings'             => 0,
+        'Test::Warnings'               => 0,
     },
     add_to_cleanup     => [ 'App-Git-Workflow-Command-BranchConflicts-*' ],
     create_makefile_pl => 'traditional',
