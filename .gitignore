@@ -1,6 +1,6 @@
 .*.sw[ponxmn]
 Debian_CPANTS.txt
-module-*
+App-Git-Workflow-Command-BranchConflicts-*
 .vimtagsdisplay
 tags
 Build
