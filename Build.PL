@@ -11,7 +11,6 @@ my $builder = Module::Build->new(
         'perl'                         => '5.006',
         'App::Git::Workflow'           => '0.8',
         'App::Git::Workflow::Command'  => '0.8',
-        'Path::Class'                  => 0,
         'Capture::Tiny'                => '0.24',
     },
     build_requires => {
