@@ -1,5 +1,9 @@
 Revision history for module
 
+0.3   2015-08-11
+        Updating for release of version 0.3
+        Removed creation of makefile (Ivan Wills)
+
 0.2   2015-07-28
         Updating for release of version 0.2
         Removed Path::Dependency (Ivan Wills)
