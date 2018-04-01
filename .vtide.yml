@@ -1,0 +1,42 @@
+---
+# Create by App::VTide::Command::Init Mon Apr  2 07:12:53 2018 VERSION 0.1.6
+count: 4
+default:
+  restart: 0
+  wait: 1
+name: app-git-workflow-command-branchconflicts
+terminals:
+  1a:
+    command: ./Build && ./Build testcover
+    restart: 1
+    wait: 0
+    watch:
+      - lib
+      - bin
+      - test
+  2:
+    edit: cmd-branch-conflicts
+editor:
+  helper: |
+    sub {
+        my ($self, $group) = @_;
+        return () if $group !~ /^cmd-/;
+
+        my ($cmd) = $group =~ /cmd-(.*)/;
+        my $lib = join '', map {ucfirst $_} split /-/, $cmd;
+        return (
+            "bin/git-$cmd",
+            "lib/App/Git/Workflow/Command/$lib.pm",
+            "t/$group.t",
+        );
+    }
+  helper_autocomplete: |
+    sub {
+      my ($pos, $args) = @_;
+      my $arg = $args->[$pos] || '';
+      my $argument = $arg && $arg ne 'edit' ? qr/^$arg/ : qr/./;
+
+      my @list = map {/^t\/cmd-(.*).t$/; $1} glob "t/cmd-*.t";
+
+      return @list;
+    }
