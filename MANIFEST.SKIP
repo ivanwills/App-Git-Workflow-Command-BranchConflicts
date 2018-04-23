@@ -74,4 +74,6 @@ vrc.yml
 tmp*
 temp*
 ^MYMETA\.json$
+^MYMETA\.json.lock$
 tags
+.vtide*
